@@ -3,6 +3,7 @@ import time
 import sys
 import os
 from colorama import Fore, Back , Style, init
+import readchar
 
 init(autoreset=True)    #This automaticly resets the text color after each print
 
@@ -15,19 +16,21 @@ def display_map():      #This is what displays the map
         line = ""
         for char in row:
             if char == "#":
-                line += Fore.LIGHTBLACK_EX + Back.LIGHTBLACK_EX + "#"
+                line += Fore.LIGHTBLACK_EX + Back.LIGHTBLACK_EX + "##"
             elif char == "*":
-                line += Fore.RED + Back.WHITE + "*"
+                line += Fore.BLUE + Back.BLUE + "**"
             elif char == "%":
-                line += Fore.YELLOW + Back.WHITE + "%"
+                line += Fore.YELLOW + Back.YELLOW + "%%"
+            elif char == "!":
+                line += Fore.RED + Back.RED + "!!"
             else:
-                line += Back.WHITE + char
+                line += Back.WHITE + "  "
         print(line)
 
 grid = []       #Declaring some int and var for the first time
 gold = 0
 width = 30
-height = 12
+height = 24
 timeout = 5
 
 start_time = time.time()    #used to help prevent the map from taking to long to generate
@@ -60,17 +63,28 @@ while player_y < height - 1:    #loop runs until the path generation reaches the
 grid[height -1][player_x] = " "     #generates a path at the bottom
 
 treasure = []
-
 for y in range(height):
     for x in range(len(grid[y])):
-        if grid[1][x] == " ":
+        if grid[y][x] == " ":
             treasure.append(x)
 
-    treasure_amount = len(treasure) // random.randint(10, 20)
+    treasure_amount = len(treasure) // random.randint(50, 100)
     chosen = random.sample(treasure, treasure_amount)
     for place in chosen:
         if grid[y][place] == " ":
             grid[y][place] = "%"
+
+enemy = []
+for y in range(height):
+    for x in range(len(grid[y])):
+        if grid[y][x] == " ":
+            enemy.append(x)
+
+    enemy_amount = len(enemy) // random.randint(50, 100)
+    chosen = random.sample(enemy, enemy_amount)
+    for place in chosen:
+        if grid[y][place] == " ":
+            grid[y][place] = "!"
 
 player_x = start_x      #resets the players position back to the start
 player_y = 0
@@ -79,8 +93,8 @@ grid[player_y][player_x] = "*"      #tells the program to place a * at the playe
 display_map()       #displays the map
 
 while player_y != height - 1:       #loop that runs until the player gets to the bottom of the map
-    print("Gold: ", gold)
-    move = input("w = up, s = down, d = right, a = left: ").lower()     #displays a prompt for the user and accepts input from them
+    print("Gold: ", gold, "\nw = up, s = down, d = right, a = left: ")     #displays a prompt for the user and accepts input from them
+    move = readchar.readkey().lower()
     grid[player_y][player_x] = " "
 
     if move == "s" and player_y + 1 < height and grid[player_y + 1][player_x] != "#":       #checks if the play eneted s and moves them down if they did
