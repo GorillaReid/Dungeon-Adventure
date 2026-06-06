@@ -8,10 +8,12 @@ import readchar
 init(autoreset=True)    #This automaticly resets the text color after each print
 
 def clear_screen():     #This clears the terminal before displaying the updated map to help reduce clutter
-    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\033[H", end="")
 
 def display_map():      #This is what displays the map
+    time.sleep(.1)
     clear_screen()
+    screen = ""
     for row in grid:
         line = ""
         for char in row:
@@ -25,7 +27,9 @@ def display_map():      #This is what displays the map
                 line += Fore.RED + Back.RED + "!!"
             else:
                 line += Back.WHITE + "  "
-        print(line)
+        screen += line + "\n"
+    screen += Fore.CYAN + Back.RESET + f"\nGold: {gold}\nUse W,A,S,D to move\n\n"
+    print(screen, end="")
 
 grid = []       #Declaring some int and var for the first time
 gold = 0
@@ -93,7 +97,6 @@ grid[player_y][player_x] = "*"      #tells the program to place a * at the playe
 display_map()       #displays the map
 
 while player_y != height - 1:       #loop that runs until the player gets to the bottom of the map
-    print("Gold: ", gold, "\nw = up, s = down, d = right, a = left: ")     #displays a prompt for the user and accepts input from them
     move = readchar.readkey().lower()
     grid[player_y][player_x] = " "
 
