@@ -13,7 +13,8 @@ gold = 0
 height = 24
 width = 30
 empty = 0
-level = 0
+level = 1
+wlevel = 0
 
 player_x = 0
 player_y = 0
@@ -33,6 +34,8 @@ def display_map():      #This is what displays the map
                 line += Fore.LIGHTYELLOW_EX + Back.LIGHTYELLOW_EX + "%%"
             elif char == "!":
                 line += Fore.RED + Back.RED + "!!"
+            elif char == "$":
+                line += Fore.GREEN + Back.GREEN + "$$"
             elif char == " ":
                 line += Back.WHITE + "  "
         screen += line + "\n"
@@ -61,7 +64,7 @@ def generate_map():
     while player_y < height - 1:    #loop runs until the path generation reaches the bottom
 
         grid[player_y][player_x] = " "
-        direction = random.choices(["down","left","right","up"], weights=[20, 30, 30, 20])[0]       #picks a random direction to generate the path
+        direction = random.choices(["down","left","right","up"], weights=[25, 35, 35, 5])[0]       #picks a random direction to generate the path
 
         if direction == "down":     #generates a path that goes down
             player_y += 1
@@ -74,7 +77,6 @@ def generate_map():
 
     grid[height -1][player_x] = " "
     
-    empty = 0
     enemy = []
     for y in range(height):
         enemyr = []
@@ -101,22 +103,34 @@ def generate_map():
             if grid[y][x] == " ":
                 treasure.append(x)
 
-        treasure_amount = len(treasure) // (enemy_amount * 10)
+        treasure_amount = len(treasure) // (enemy_amount * 20)
         chosen = random.sample(treasure, treasure_amount)
         for place in chosen:
             if grid[y][place] == " ":
                 grid[y][place] = "%"
+    key = []
+    for y in range(height):
+        for x in range(len(grid[y])):
+            if grid[y][x] == " ":
+                key.append(x)
+
+        key_amount = len(key) // (enemy_amount+treasure_amount * 150)
+        chosen = random.sample(key, key_amount)
+        for place in chosen:
+            for g in range(1):
+                if grid[y][place] == " ":
+                    grid[y][place] = "$"
     return start_x
 #------------------------------------------------------------------------------------------------------------------------------------
 def new():     #This clears the terminal before displaying the updated map to help reduce clutter
     print("\033[H", end="")
 #------------------------------------------------------------------------------------------------------------------------------------
 def inventory():
-    global level
+    global wlevel
     clear()
     screen = ""
-    if level > 0:
-        screen += f"Weapon Level: {level}"
+    if wlevel > 0:
+        screen += f"Weapon Level: {wlevel}"
     else:
         screen = "You currently dont have anything in your inventory"
     print(screen, end="")
@@ -125,6 +139,7 @@ def inventory():
 def move():
     global gold
     global i
+    global level
     player_x = generate_map()      #resets the players position back to the start
     player_y = 0
     grid[player_y][player_x] = "*"
@@ -154,7 +169,8 @@ def move():
         grid[player_y][player_x] = "*"
         display_map()       #displays the map
         if player_y == height - 1:
-            print(Fore.GREEN + "Congratulations you won!\n")
+            print(Fore.GREEN + f"You made it through Level {level}!\n")
+            level += 1
         if i <= 0:
             print(Fore.RED + "Game Over! You lost all your life\n")
             sys.exit()
@@ -165,7 +181,7 @@ def clear():
 #------------------------------------------------------------------------------------------------------------------------------------
 def shop():
     global gold
-    global level
+    global wlevel
     global i
     clear()
     print(Fore.RED + "Press the corresponding button to what you want to buy" + Fore.YELLOW + "\nGold: ", gold, Fore.LIGHTRED_EX + "\nL: Weapon Level\nM: Extra Life")
@@ -174,16 +190,16 @@ def shop():
     if shop == "l":
         if gold >= 100:
             gold -= 100
-            print("You have sucsesfully upgraded your Weapon Level")
-            level += 1
+            print(Fore.LIGHTBLUE_EX + "You have succsessfully upgraded your Weapon Level")
+            wlevel += 1
         else:
             print(Fore.RED + f"You dont have enough gold for that, you need ", 100 - gold, Fore.RED + " more gold")
     if shop == "m":
         if gold >= 100:
             gold -= 100
-            print("You have sucsesfully bought another Life!")
+            print(Fore.LIGHTBLUE_EX + "You have succsessfully bought another Life!")
             i += 1
         else:
-            print(f"You dont have enough gold for that, you need ", 100 - gold, " more gold")
+            print(Fore.RED + f"You dont have enough gold for that, you need ", 100 - gold, Fore.RED + " more gold")
     time.sleep(1)
 #------------------------------------------------------------------------------------------------------------------------------------
