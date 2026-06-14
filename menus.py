@@ -39,7 +39,6 @@ def display_map():      #This is what displays the map
                 line += Fore.GREEN + Back.GREEN + "$$"
             elif char == " ":
                 line += Back.WHITE + "  "
-                empty += 1
         screen += line + "\n"
     screen += Back.RESET + Fore.RED + "Life: "
     
@@ -47,7 +46,7 @@ def display_map():      #This is what displays the map
     for x in range(len(life)):
         line = Back.LIGHTRED_EX + Fore.LIGHTRED_EX + "!!" + Back.BLACK + Fore.BLACK + "!"
         screen += line
-    screen += "   " + Fore.LIGHTYELLOW_EX + Back.RESET + f"\n\nGold: {gold}\n" + Fore.CYAN + f"Use W,A,S,D to move\n{empty}\n"
+    screen += "   " + Fore.LIGHTYELLOW_EX + Back.RESET + f"\n\nGold: {gold}\n" + Fore.CYAN + f"Use W,A,S,D to move\n{empty}  \n"
     print(screen, end="")
 #------------------------------------------------------------------------------------------------------------------------------------
 def generate_map():
@@ -79,6 +78,11 @@ def generate_map():
 
     grid[height -1][player_x] = " "
     
+    for y in range(height):
+        for x in range(width):
+            if grid[y][x] == " ":
+                empty += 1
+
     for y in range(height):                         #enemies
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
