@@ -19,7 +19,7 @@ wlevel = 0
 player_x = 0
 player_y = 0
 #------------------------------------------------------------------------------------------------------------------------------------
-def display_map():      #This is what displays the map
+def display_map():
     global empty
     time.sleep(.1)
     new()
@@ -53,27 +53,27 @@ def generate_map():
     global grid
     global empty
     grid = []
-    for y in range(height):     #generates the base structure of the map
+    for y in range(height):
         row = ["#"] * width
         grid.append(row)
 
-    start_x = random.randint(2, width - 3)      #picks a random spot on the top row to start the player at
+    start_x = random.randint(2, width - 3)
 
-    player_x = start_x      #setting the players starting position
+    player_x = start_x
     player_y = 0
 
-    while player_y < height - 1:    #loop runs until the path generation reaches the bottom
+    while player_y < height - 1:
 
         grid[player_y][player_x] = " "
-        direction = random.choices(["down","left","right","up"], weights=[15, 40, 40, 5])[0]       #picks a random direction to generate the path
+        direction = random.choices(["down","left","right","up"], weights=[15, 40, 40, 5])[0]
 
-        if direction == "down":     #generates a path that goes down
+        if direction == "down":
             player_y += 1
-        elif direction == "left" and player_x > 1 and player_y > 1:      #generates a path that goes left
+        elif direction == "left" and player_x > 1 and player_y > 1:
             player_x -= 1
-        elif direction == "right" and player_x < width - 2 and player_y > 1:     #generates a path that goes right
+        elif direction == "right" and player_x < width - 2 and player_y > 1:
             player_x += 1
-        elif direction == "up" and player_y > 1:        #generates a path that goes up (for more variety)
+        elif direction == "up" and player_y > 1:
             player_y -= 1
 
     grid[height -1][player_x] = " "
@@ -83,21 +83,21 @@ def generate_map():
             if grid[y][x] == " ":
                 empty += 1
 
-    for y in range(height):                         #enemies
+    for y in range(height):
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
                 place = random.randint(1, 100)
                 if place >= 95:
                     grid[y][x] = "!"
 
-    for y in range(height):                         #gold
+    for y in range(height):
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
                 place = random.randint(1, 100)
                 if place >= 95:
                     grid[y][x] = "%"
 
-    for y in range(height):                         #keys
+    for y in range(height):
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
                 place = random.randint(1, 1000)
@@ -105,7 +105,7 @@ def generate_map():
                     grid[y][x] = "$"
     return start_x
 #------------------------------------------------------------------------------------------------------------------------------------
-def new():     #This clears the terminal before displaying the updated map to help reduce clutter
+def new():
     print("\033[H", end="")
 #------------------------------------------------------------------------------------------------------------------------------------
 def inventory():
@@ -124,22 +124,22 @@ def move():
     global i
     global level
     global empty
-    player_x = generate_map()      #resets the players position back to the start
+    player_x = generate_map()
     player_y = 0
     grid[player_y][player_x] = "*"
     display_map()
 
-    while player_y != height - 1:       #loop that runs until the player gets to the bottom of the map
+    while player_y != height - 1: 
         move = readchar.readkey().lower()
         grid[player_y][player_x] = " "
 
-        if move == "s" and player_y + 1 < height and grid[player_y + 1][player_x] != "#":       #checks if the play eneted s and moves them down if they did
+        if move == "s" and player_y + 1 < height and grid[player_y + 1][player_x] != "#":
             player_y += 1
-        if move == "w" and grid[player_y - 1][player_x] != "#":     #checks if the player entered w and moves them up if they did
+        if move == "w" and grid[player_y - 1][player_x] != "#":
             player_y -= 1 
-        if move == "d" and grid[player_y][player_x + 1] != "#":     #checks if the player entered d and moves them up if they did
+        if move == "d" and grid[player_y][player_x + 1] != "#":
             player_x += 1
-        if move == "a" and grid[player_y][player_x - 1] != "#":     #checks if the player entered a and moves them up if they did
+        if move == "a" and grid[player_y][player_x - 1] != "#":
             player_x -= 1
         if move == "m":
             gold += 100
@@ -147,13 +147,13 @@ def move():
             empty = 0
             generate_map()
 
-        if grid[player_y][player_x] == "%":     #checks if the player is on a treasure item and gives them a random amount of gold between 1-5
+        if grid[player_y][player_x] == "%":
             value = random.randint(1, 3)
             gold += value
         if grid[player_y][player_x] == "!":
             i -= 1
         grid[player_y][player_x] = "*"
-        display_map()       #displays the map
+        display_map()
         if player_y == height - 1:
             print(Fore.GREEN + f"You made it through Level {level}!\n")
             level += 1
