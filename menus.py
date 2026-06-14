@@ -4,23 +4,26 @@ import sys
 import time
 import os
 from colorama import Fore, Back, Style, init
+from collections import deque
 
 init(autoreset=True)
 
 grid = []
-i = 5
+life = 5
 gold = 0
 height = 30
-width = 35
+width = 30
 empty = 0
 level = 1
 wlevel = 0
+size = 4
 
 player_x = 0
 player_y = 0
 #------------------------------------------------------------------------------------------------------------------------------------
 def display_map():
     global empty
+    global life
     time.sleep(.1)
     new()
     screen = ""
@@ -37,13 +40,15 @@ def display_map():
                 line += Fore.RED + Back.RED + "!!"
             elif char == "$":
                 line += Fore.GREEN + Back.GREEN + "$$"
+            elif char == "&":
+                line += Fore.MAGENTA + Back.MAGENTA + "&&"
             elif char == " ":
                 line += Back.WHITE + "  "
         screen += line + "\n"
     screen += Back.RESET + Fore.RED + "Life: "
     
-    life = ["!"] * i
-    for x in range(len(life)):
+    lives = ["!"] * life
+    for x in range(len(lives)):
         line = Back.LIGHTRED_EX + Fore.LIGHTRED_EX + "!!" + Back.BLACK + Fore.BLACK + "!"
         screen += line
     screen += "   " + Fore.LIGHTYELLOW_EX + Back.RESET + f"\n\nGold: {gold}\n" + Fore.CYAN + f"Use W,A,S,D to move\n{empty}  \n"
@@ -52,6 +57,7 @@ def display_map():
 def generate_map():
     global grid
     global empty
+    global size
     grid = []
     for y in range(height):
         row = ["#"] * width
@@ -75,22 +81,23 @@ def generate_map():
             player_x += 1
         elif direction == "up" and player_y > 1:
             player_y -= 1
-
     grid[height -1][player_x] = " "
-    
+
+    room()
+
     for y in range(height):
         for x in range(width):
             if grid[y][x] == " ":
                 empty += 1
 
-    for y in range(height):
+    for y in range(height - 1):
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
                 place = random.randint(1, 100)
                 if place >= 95:
                     grid[y][x] = "!"
 
-    for y in range(height):
+    for y in range(height - 1):
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
                 place = random.randint(1, 100)
@@ -121,7 +128,7 @@ def inventory():
 #------------------------------------------------------------------------------------------------------------------------------------
 def move():
     global gold
-    global i
+    global life
     global level
     global empty
     player_x = generate_map()
@@ -151,13 +158,13 @@ def move():
             value = random.randint(1, 3)
             gold += value
         if grid[player_y][player_x] == "!":
-            i -= 1
+            life -= 1
         grid[player_y][player_x] = "*"
         display_map()
         if player_y == height - 1:
-            print(Fore.GREEN + f"You made it through Level {level}!\n")
+            print(Fore.GREEN + f"You made it through Level {level}!")
             level += 1
-        if i <= 0:
+        if life <= 0:
             print(Fore.RED + "Game Over! You lost all your life\n")
             sys.exit()
     time.sleep(1)
@@ -168,7 +175,7 @@ def clear():
 def shop():
     global gold
     global wlevel
-    global i
+    global life
     clear()
     print(Fore.RED + "Press the corresponding button to what you want to buy" + Fore.YELLOW + "\nGold: ", gold, Fore.LIGHTRED_EX + "\nL: Weapon Level\nM: Extra Life")
     shop = readchar.readkey().lower()
@@ -184,8 +191,40 @@ def shop():
         if gold >= 100:
             gold -= 100
             print(Fore.LIGHTBLUE_EX + "You have succsessfully bought another Life!")
-            i += 1
+            life += 1
         else:
             print(Fore.RED + f"You dont have enough gold for that, you need ", 100 - gold, Fore.RED + " more gold")
     time.sleep(1)
 #------------------------------------------------------------------------------------------------------------------------------------
+def room():
+    global grid
+    player_y = random.randint(1, height - (size + 1))
+    player_x = random.randint(1, width - (size + 1))
+    for y in range(size):
+        for x in range(size):
+            grid[player_y + y][player_x + x] = "&"
+    
+    player_y += random.randint(0, 3)
+    player_x += random.randint(0, 3)
+    grid[player_y][player_x] = "$"
+    i = 0
+    while player_x != width:
+        if grid[player_y][player_x] != " ":
+            player_x += 1
+            i += 1
+        elif grid[player_y][player_x] == " ":
+            while i > 0:
+                print("test", i)
+                grid[player_y][player_x - i] = "&"
+                i -= 1
+            if i == 0:
+                path()
+                break
+        if player_x == width - 1:
+            print("Error no path found")
+            time.sleep(1)
+def path():
+    for y in range(height):
+        for x in range(width):
+            if grid[y][x] == "&":
+                grid[y][x] = " "
