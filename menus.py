@@ -1,10 +1,10 @@
-import random
-import readchar
-import sys
-import time
-import os
-from colorama import Fore, Back, Style, init
-from collections import deque
+import random       #used to pick random numbers or words
+import readchar     #used to help the player move around the map better
+import sys          #???
+import time         #used for pausing the program for a certain amount of time
+import os       #???
+from colorama import Fore, Back, Style, init        #used for color
+import threading        #used to have multiple loops running at a time
 
 init(autoreset=True)
 
@@ -135,6 +135,8 @@ def move():
     global life
     global level
     global empty
+    global height
+    global player_y
     player_x = generate_map()
     player_y = 0
     grid[player_y][player_x] = "*"
@@ -160,6 +162,8 @@ def move():
             player_y = 0
             grid[player_y][player_x] = "*"
             display_map()
+        if move == "q":
+            sys.exit()
 
         if grid[player_y][player_x] == "%":
             value = random.randint(1, 3)
@@ -167,7 +171,6 @@ def move():
         if grid[player_y][player_x] == "!":
             life -= 1
         grid[player_y][player_x] = "*"
-        display_map()
         if player_y == height - 1:
             print(Fore.GREEN + f"You made it through Level {level}!")
             level += 1
@@ -228,7 +231,6 @@ def room():
                 break
     player_x -= i
     while grid[player_y][player_x] != " ":
-        print("Error generating path from room")
         #grid[player_y][player_x] = " "
         #player_x -= 1
         break
@@ -239,3 +241,31 @@ def path():
         for x in range(width):
             if grid[y][x] == "&":
                 grid[y][x] = " "
+#------------------------------------------------------------------------------------------------------------------------------------
+def enemy_move():
+    global height
+    global player_y
+    while True:
+        if player_y == height - 1:
+            sys.exit()
+        for y in range(height):
+            for x in range(width):
+                if grid[y][x] == "!":
+                    time.sleep(0.1)
+                    direction = random.randint(1, 4)
+                    if grid[y][x + 1] == " " and direction == 1:
+                        grid[y][x + 1] = "!"
+                        grid[y][x]= " "
+                        display_map()
+                    if grid[y - 1][x] == " " and direction == 2:
+                        grid[y - 1][x] = "!"
+                        grid[y][x]= " "
+                        display_map()
+                    if grid[y][x - 1] == " " and direction == 3:
+                        grid[y][x - 1] = "!"
+                        grid[y][x]= " "
+                        display_map()
+                    if grid[y + 1][x] == " " and direction == 4:
+                        grid[y + 1][x] = "!"
+                        grid[y][x]= " "
+                        display_map()

@@ -1,5 +1,6 @@
 import random       #imports for different libarys
 import time
+import threading
 import sys
 from colorama import Fore, Back , Style, init
 import readchar
@@ -13,7 +14,13 @@ while 1:
     if menu == "i":
         menus.inventory()
     if menu == "l":
-        menus.move()
+        threading.Thread(target=menus.move).start()
+        threading.Thread(target=menus.enemy_move).start()
+
+        while True:
+            time.sleep(1)
+            if menus.player_y == menus.height - 1:
+                break            
     if menu == "j":
         menus.shop()
     if menu == "q":
