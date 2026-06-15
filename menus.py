@@ -16,7 +16,7 @@ width = 30
 empty = 0
 level = 1
 wlevel = 0
-size = 4
+size = 6
 
 player_x = 0
 player_y = 0
@@ -42,6 +42,8 @@ def display_map():
                 line += Fore.GREEN + Back.GREEN + "$$"
             elif char == "&":
                 line += Fore.MAGENTA + Back.MAGENTA + "&&"
+            elif char == "@":
+                line += Fore.CYAN + Back.CYAN + "@@"
             elif char == " ":
                 line += Back.WHITE + "  "
         screen += line + "\n"
@@ -83,7 +85,9 @@ def generate_map():
             player_y -= 1
     grid[height -1][player_x] = " "
 
-    room()
+    amount = random.randint(1, 3)
+    for x in range(amount):
+        room()
 
     for y in range(height):
         for x in range(width):
@@ -94,7 +98,7 @@ def generate_map():
         for x in range(len(grid[y])):
             if grid[y][x] == " ":
                 place = random.randint(1, 100)
-                if place >= 95:
+                if place >= 98:
                     grid[y][x] = "!"
 
     for y in range(height - 1):
@@ -152,7 +156,10 @@ def move():
             gold += 100
         if move == "r":
             empty = 0
-            generate_map()
+            player_x = generate_map()
+            player_y = 0
+            grid[player_y][player_x] = "*"
+            display_map()
 
         if grid[player_y][player_x] == "%":
             value = random.randint(1, 3)
@@ -214,15 +221,19 @@ def room():
             i += 1
         elif grid[player_y][player_x] == " ":
             while i > 0:
-                print("test", i)
                 grid[player_y][player_x - i] = "&"
                 i -= 1
             if i == 0:
                 path()
                 break
-        if player_x == width - 1:
-            print("Error no path found")
-            time.sleep(1)
+    player_x -= i
+    while grid[player_y][player_x] != " ":
+        print("Error generating path from room")
+        #grid[player_y][player_x] = " "
+        #player_x -= 1
+        break
+    path()
+#------------------------------------------------------------------------------------------------------------------------------------
 def path():
     for y in range(height):
         for x in range(width):
