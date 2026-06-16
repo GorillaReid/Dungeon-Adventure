@@ -150,12 +150,14 @@ def move():
             player_y += 1
         if move == "w" and grid[player_y - 1][player_x] != "#":
             player_y -= 1 
-        if move == "d" and grid[player_y][player_x + 1] != "#":
+        if move == "d" and grid[player_y][player_x + 1] != "#" and player_x + 1 < width - 1:
             player_x += 1
-        if move == "a" and grid[player_y][player_x - 1] != "#":
+        if move == "a" and grid[player_y][player_x - 1] != "#" and player_x - 1 > 0:
             player_x -= 1
         if move == "m":
-            gold += 100
+            gold = gold * 1000
+        if move == "l":
+            life += life * 1000
         if move == "r":
             empty = 0
             player_x = generate_map()
@@ -227,13 +229,12 @@ def room():
                 grid[player_y][player_x - i] = "&"
                 i -= 1
             if i == 0:
-                path()
                 break
     player_x -= i
     while grid[player_y][player_x] != " ":
-        #grid[player_y][player_x] = " "
-        #player_x -= 1
-        break
+        grid[player_y][player_x] = " "
+        player_x -= 1
+        #break
     path()
 #------------------------------------------------------------------------------------------------------------------------------------
 def path():
@@ -265,7 +266,7 @@ def enemy_move():
                         grid[y][x - 1] = "!"
                         grid[y][x]= " "
                         display_map()
-                    if grid[y + 1][x] == " " and direction == 4:
+                    if grid[y + 1][x] == " " and direction == 4 and y + 1 < height - 1:
                         grid[y + 1][x] = "!"
                         grid[y][x]= " "
                         display_map()
