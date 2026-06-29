@@ -14,13 +14,7 @@ while 1:
     if menu == "i":
         menus.inventory()
     if menu == "l":
-        threading.Thread(target=menus.move).start()
-        threading.Thread(target=menus.enemy_move).start()
-
-        while True:
-            time.sleep(0.8)
-            if menus.player_y == menus.height - 1:
-                break            
+        menus.move()         
     if menu == "j":
         menus.shop()
     if menu == "q":

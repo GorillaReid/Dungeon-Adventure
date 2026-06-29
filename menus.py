@@ -137,10 +137,15 @@ def move():
     global empty
     global height
     global player_y
+    global player_x
+
     player_x = generate_map()
     player_y = 0
     grid[player_y][player_x] = "*"
     display_map()
+    
+    last_enemy_move = time.time()
+    enemy_move_delay = 0.5
 
     while player_y != height - 1: 
         move = readchar.readkey().lower()
@@ -179,7 +184,11 @@ def move():
         if life <= 0:
             print(Fore.RED + "Game Over! You lost all your life\n")
             sys.exit()
-    time.sleep(1)
+
+        current_time = time.time()
+        if current_time - last_enemy_move >= enemy_move_delay:
+            enemy_move()
+            last_enemy_move = current_time
 #------------------------------------------------------------------------------------------------------------------------------------
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -216,8 +225,8 @@ def room():
         for x in range(size):
             grid[player_y + y][player_x + x] = "&"
     
-    player_y += random.randint(0, 3)
-    player_x += random.randint(0, 3)
+    player_y += random.randint(0, size)
+    player_x += random.randint(0, size)
     grid[player_y][player_x] = "$"
     i = 0
     while player_x != width:
@@ -246,27 +255,23 @@ def path():
 def enemy_move():
     global height
     global player_y
-    while True:
-        if player_y == height - 1:
-            sys.exit()
-        for y in range(height):
-            for x in range(width):
-                if grid[y][x] == "!":
-                    time.sleep(0.1)
-                    direction = random.randint(1, 4)
-                    if grid[y][x + 1] == " " and direction == 1:
-                        grid[y][x + 1] = "!"
-                        grid[y][x]= " "
-                        display_map()
-                    if grid[y - 1][x] == " " and direction == 2:
-                        grid[y - 1][x] = "!"
-                        grid[y][x]= " "
-                        display_map()
-                    if grid[y][x - 1] == " " and direction == 3:
-                        grid[y][x - 1] = "!"
-                        grid[y][x]= " "
-                        display_map()
-                    if grid[y + 1][x] == " " and direction == 4 and y + 1 < height - 1:
-                        grid[y + 1][x] = "!"
-                        grid[y][x]= " "
-                        display_map()
+    for y in range(height):
+        for x in range(width):
+            if grid[y][x] == "!":
+                direction = random.randint(1, 4)
+                if grid[y][x + 1] == " " and direction == 1:
+                    grid[y][x + 1] = "!"
+                    grid[y][x]= " "
+                    display_map()
+                if grid[y - 1][x] == " " and direction == 2:
+                    grid[y - 1][x] = "!"
+                    grid[y][x]= " "
+                    display_map()
+                if grid[y][x - 1] == " " and direction == 3:
+                    grid[y][x - 1] = "!"
+                    grid[y][x]= " "
+                    display_map()
+                if grid[y + 1][x] == " " and direction == 4 and y + 1 < height - 1:
+                    grid[y + 1][x] = "!"
+                    grid[y][x]= " "
+                    display_map()
