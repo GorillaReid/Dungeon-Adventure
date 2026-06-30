@@ -17,6 +17,9 @@ empty = 0
 level = 1
 wlevel = 0
 size = 6
+enemies = []
+delete = "no"
+spot = 0
 
 player_x = 0
 player_y = 0
@@ -24,6 +27,7 @@ player_y = 0
 def display_map():
     global empty
     global life
+    global enemies
     time.sleep(.1)
     new()
     screen = ""
@@ -33,7 +37,7 @@ def display_map():
             if char == "#":
                 line += Fore.LIGHTBLACK_EX + Back.LIGHTBLACK_EX + "##"
             elif char == "*":
-                line += Fore.BLUE + Back.BLUE + "**"
+                line += Fore.BLUE + Back.CYAN + "[]"
             elif char == "%":
                 line += Fore.LIGHTYELLOW_EX + Back.LIGHTYELLOW_EX + "%%"
             elif char == "!":
@@ -53,13 +57,15 @@ def display_map():
     for x in range(len(lives)):
         line = Back.LIGHTRED_EX + Fore.LIGHTRED_EX + "!!" + Back.BLACK + Fore.BLACK + "!"
         screen += line
-    screen += "   " + Fore.LIGHTYELLOW_EX + Back.RESET + f"\n\nGold: {gold}\n" + Fore.CYAN + f"Use W,A,S,D to move\n{empty}  \n"
+    screen += "   " + Fore.LIGHTYELLOW_EX + Back.RESET + f"\n\nGold: {gold}\n" + Fore.CYAN + f"Use W,A,S,D to move\n{empty}\n{len(enemies)}\n"
     print(screen, end="")
 #------------------------------------------------------------------------------------------------------------------------------------
 def generate_map():
     global grid
     global empty
     global size
+    global enemies
+    enemies = []
     grid = []
     for y in range(height):
         row = ["#"] * width
@@ -94,26 +100,30 @@ def generate_map():
             if grid[y][x] == " ":
                 empty += 1
 
-    for y in range(height - 1):
-        for x in range(len(grid[y])):
-            if grid[y][x] == " ":
-                place = random.randint(1, 100)
-                if place >= 98:
-                    grid[y][x] = "!"
+#used to generate the enemys in random locations on the map #v#
+    for y in range(height - 1):                             #|# runs through the height of the map 
+        for x in range(width):                              #|# runs through the width of the map
+            if grid[y][x] == " ":                           #|# if its a empty space it will run to see if it will place a enemy there or not
+                place = random.randint(1, 100)              #|# generates a random number between 1 and 100
+                if place >= 98:                             #|# if the number is 98, 99, or 100 it places an enemy (3% chance)
+                    grid[y][x] = "!"                        #^# places the enemy
+                    enemies.append((y, x))
 
-    for y in range(height - 1):
-        for x in range(len(grid[y])):
-            if grid[y][x] == " ":
-                place = random.randint(1, 100)
-                if place >= 95:
-                    grid[y][x] = "%"
+#used to generate the gold in random locations on the map   #v#
+    for y in range(height - 1):                             #|# runs through the height of the map
+        for x in range(width):                              #|# runs through the width of the map
+            if grid[y][x] == " ":                           #|# if its a empty space it will run to see if it will place a peice of gold there or not
+                place = random.randint(1, 100)              #|# generates a random number between 1 and 100
+                if place >= 95:                             #|# if the number is 95, 96, 97, 98, 99, or 100 it generates a gold peice (6% chance)
+                    grid[y][x] = "%"                        #^# generates the gold
 
-    for y in range(height):
-        for x in range(len(grid[y])):
-            if grid[y][x] == " ":
-                place = random.randint(1, 1000)
-                if place > 999:
-                    grid[y][x] = "$"
+#not used for anything yet, still working on it             #v#
+    for y in range(height):                                 #|#
+        for x in range(width):                              #|#
+            if grid[y][x] == " ":                           #|#
+                place = random.randint(1, 1000)             #|#
+                if place > 999:                             #|#
+                    grid[y][x] = "$"                        #^#
     return start_x
 #------------------------------------------------------------------------------------------------------------------------------------
 def new():
@@ -143,9 +153,6 @@ def move():
     player_y = 0
     grid[player_y][player_x] = "*"
     display_map()
-    
-    last_enemy_move = time.time()
-    enemy_move_delay = 0.5
 
     while player_y != height - 1: 
         move = readchar.readkey().lower()
@@ -162,7 +169,7 @@ def move():
         if move == "m":
             gold = gold * 1000
         if move == "l":
-            life += life * 1000
+            life += 5
         if move == "r":
             empty = 0
             player_x = generate_map()
@@ -185,10 +192,8 @@ def move():
             print(Fore.RED + "Game Over! You lost all your life\n")
             sys.exit()
 
-        current_time = time.time()
-        if current_time - last_enemy_move >= enemy_move_delay:
-            enemy_move()
-            last_enemy_move = current_time
+        enemy_move()
+        display_map()
 #------------------------------------------------------------------------------------------------------------------------------------
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -219,31 +224,34 @@ def shop():
 #------------------------------------------------------------------------------------------------------------------------------------
 def room():
     global grid
+    exist = "no"
     player_y = random.randint(1, height - (size + 1))
     player_x = random.randint(1, width - (size + 1))
     for y in range(size):
         for x in range(size):
+            if grid[player_y + y][player_x + x] == " ":
+                exist = "yes"
             grid[player_y + y][player_x + x] = "&"
     
-    player_y += random.randint(0, size)
-    player_x += random.randint(0, size)
-    grid[player_y][player_x] = "$"
-    i = 0
-    while player_x != width:
-        if grid[player_y][player_x] != " ":
-            player_x += 1
-            i += 1
-        elif grid[player_y][player_x] == " ":
-            while i > 0:
-                grid[player_y][player_x - i] = "&"
-                i -= 1
-            if i == 0:
-                break
-    player_x -= i
-    while grid[player_y][player_x] != " ":
-        grid[player_y][player_x] = " "
-        player_x -= 1
-        #break
+    if exist != "yes":
+        player_y += random.randint(0, size)
+        player_x += random.randint(0, size)
+        grid[player_y][player_x] = "$"
+        i = 0
+        while player_x != width:
+            if grid[player_y][player_x] != " ":
+                player_x += 1
+                i += 1
+            elif grid[player_y][player_x] == " ":
+                while i > 0:
+                    grid[player_y][player_x - i] = "&"
+                    i -= 1
+                if i == 0:
+                    break
+        player_x -= i
+        while grid[player_y][player_x] != " ":
+            grid[player_y][player_x] = " "
+            player_x -= 1
     path()
 #------------------------------------------------------------------------------------------------------------------------------------
 def path():
@@ -253,25 +261,34 @@ def path():
                 grid[y][x] = " "
 #------------------------------------------------------------------------------------------------------------------------------------
 def enemy_move():
-    global height
-    global player_y
-    for y in range(height):
-        for x in range(width):
-            if grid[y][x] == "!":
-                direction = random.randint(1, 4)
-                if grid[y][x + 1] == " " and direction == 1:
-                    grid[y][x + 1] = "!"
-                    grid[y][x]= " "
-                    display_map()
-                if grid[y - 1][x] == " " and direction == 2:
-                    grid[y - 1][x] = "!"
-                    grid[y][x]= " "
-                    display_map()
-                if grid[y][x - 1] == " " and direction == 3:
-                    grid[y][x - 1] = "!"
-                    grid[y][x]= " "
-                    display_map()
-                if grid[y + 1][x] == " " and direction == 4 and y + 1 < height - 1:
-                    grid[y + 1][x] = "!"
-                    grid[y][x]= " "
-                    display_map()
+    global enemies, grid, life, delete, spot
+    for z in range(len(enemies)):
+        enemy_y, enemy_x = enemies[z]
+        direction = random.randint(1, 4)
+        if direction == 1 and grid[enemy_y - 1][enemy_x] != "#":
+            grid[enemy_y][enemy_x] = " "
+            enemy_y -= 1
+        if direction == 2 and grid[enemy_y + 1][enemy_x] != "#" and enemy_y + 1 != height - 1:
+            grid[enemy_y][enemy_x] = " "
+            enemy_y += 1
+        if direction == 3 and grid[enemy_y][enemy_x - 1] != "#":
+            grid[enemy_y][enemy_x] = " "
+            enemy_x -= 1
+        if direction == 4 and grid[enemy_y][enemy_x + 1] != "#":
+            grid[enemy_y][enemy_x] = " "
+            enemy_x += 1
+        
+        if grid[enemy_y][enemy_x] == grid[player_y][player_x]:
+            delete = "yes"
+            spot = z
+        else:
+            grid[enemy_y][enemy_x] = "!"
+            enemies[z] = enemy_y, enemy_x
+    if delete == "yes":
+        del enemies[spot]
+        grid[player_y][player_x] = "*"
+        delete = "no"
+#------------------------------------------------------------------------------------------------------------------------------------
+def info():
+    print("Coming soon!")
+#------------------------------------------------------------------------------------------------------------------------------------
