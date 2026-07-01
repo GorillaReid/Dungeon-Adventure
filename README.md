@@ -7,10 +7,10 @@ Dungeon Adventure:
 
 	DEMO LINK
 
-required python libraries/packages:
-- sudo apt install python3
-- python3 -m pip install colorama	  or	  sudo apt install python-colorama
-- python3 -m pip install readchar	  or	  sudo apt install python-readchar
+Required python libraries/packages:
+- python3: sudo apt install python3
+- colorama: python3 -m pip install colorama	  or	  sudo apt install python-colorama
+- readchar: python3 -m pip install readchar	  or	  sudo apt install python-readchar
 
 Features:
 - Randomly generating dungeon levels
