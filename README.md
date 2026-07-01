@@ -2,8 +2,9 @@ Dungeon Adventure:
 	This is a dungeon based game that you run in your devices terminal or shell
 
 <img width="222.1" height="257.1" alt="IMG_0144" src="https://github.com/user-attachments/assets/749126a1-2c5b-4367-833f-d952bfb28b2c" />
-   	
+
 https://github.com/GorillaReid/Dungeon-Adventure/releases/tag/v1.0.0
+- To play the game click the link above then download the "Source Code.zip" file, unzip the file, install the required libaries listed below and then run python3 main.py
 
 Required python libraries/packages:
 - python3: sudo apt install python3
