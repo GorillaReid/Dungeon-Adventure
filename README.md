@@ -2,7 +2,7 @@ Dungeon Adventure:
 	This is a dungeon based game that you run in your devices terminal or shell
 
 
-	<img width="222.1" height="257.1" alt="IMG_0144" src="https://github.com/user-attachments/assets/749126a1-2c5b-4367-833f-d952bfb28b2c" />
+<img width="222.1" height="257.1" alt="IMG_0144" src="https://github.com/user-attachments/assets/749126a1-2c5b-4367-833f-d952bfb28b2c" />
    	
 
 	DEMO LINK
