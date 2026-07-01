@@ -20,7 +20,7 @@ Features:
 - A Info section to explain a little about the game
 
 Explanation of how the random dungeon generation works:
-	To generate random dungeons each time I created a function that basicly starts at the players starting position and then picks a random direction up, down, left, or right to generate a path to. Each direction has a different weight so that its more likely to go down than up, they also have statements to check and make sure its not trying to generate a path outside the map. After it reaches the bottom it stops and resets the players position the the start and lets them play the game.
+- To generate random dungeons each time I created a function that basicly starts at the players starting position and then picks a random direction up, down, left, or right to generate a path to. Each direction has a different weight so that its more likely to go down than up, they also have statements to check and make sure its not trying to generate a path outside the map. After it reaches the bottom it stops and resets the players position the the start and lets them play the game.
 
 Credits:
 - I used the readchar and random libraries the most out of all of them.
