@@ -12,7 +12,7 @@ required python libraries/packages:
 - python3 -m pip install colorama	  or	  sudo apt install python-colorama
 - python3 -m pip install readchar	  or	  sudo apt install python-readchar
 
-
+Features:
 - Randomly generating dungeon levels
 - Colored text and map
 - A Shop to buy more lifes or open chests
