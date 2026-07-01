@@ -12,11 +12,13 @@ required python libraries/packages:
 	python3 -m pip install colorama	  or	  sudo apt install python-colorama
 	python3 -m pip install readchar	  or	  sudo apt install python-readchar
 
+
 - Randomly generating dungeon levels
 - Colored text and map
 - A Shop to buy more lifes or open chests
 - An inventory to view your items and lives
 - A Info section to explain a little about the game
+
 
 	To generate random dungeons each time I created a function that basicly starts at the players starting position and then picks a random direction up, down, left, or right to generate a path to. Each direction has a different weight so that its more likely to go down than up, they also have statements to check and make sure its not trying to generate a path outside the map. After it reaches the bottom it stops and resets the players position the the start and lets them play the game.
 
