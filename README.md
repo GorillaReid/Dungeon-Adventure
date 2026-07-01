@@ -1,4 +1,4 @@
-Dungeon Adventure
+Dungeon Adventure:
 	This is a dungeon based game that you run in your devices terminal or shell
 
 	IMAGE
