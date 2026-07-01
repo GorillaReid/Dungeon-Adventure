@@ -3,8 +3,7 @@ Dungeon Adventure:
 
 <img width="222.1" height="257.1" alt="IMG_0144" src="https://github.com/user-attachments/assets/749126a1-2c5b-4367-833f-d952bfb28b2c" />
    	
-
-	DEMO LINK
+https://github.com/GorillaReid/Dungeon-Adventure/releases/tag/v1.0.0
 
 Required python libraries/packages:
 - python3: sudo apt install python3
