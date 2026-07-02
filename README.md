@@ -6,7 +6,7 @@ Dungeon Adventure:
 https://github.com/GorillaReid/Dungeon-Adventure/releases/tag/v1.0.0
 	
 *Note: Currently this only works with Linux devices Windows and Mac cant run it at the moment, sorry if this is a inconvenience. I hope to get versions campatible with all devices soon.*
-- To play the game click the link above then download the Dungeon-Adventure file, after you do that open your terminal and go to the folder with the file (ex. cd ~/Downloads) and run **chmod +x Dungeon-Adventure**, after running that command you should just need to type the command **./Dungeon-Adventure** and it should start the game. Hope you guys enjoy!
+- To play the game click the link above then download the Dungeon-Adventure file, after you do that open your terminal and go to the folder with the file (ex. cd ~/Downloads) and run **chmod +x Dungeon-Adventure-Linux**, after running that command you should just need to type the command **./Dungeon-Adventure-Linux** and it should start the game. Hope you guys enjoy!
 
 Required python libraries/packages:
 (*YOU DONT NEED THESE TO PLAY IF YOU DOWNLOAD THE Dungeon-Adventure FILE BUT OPTIONAL IF YOU WANT TO RUN IT WITHOUT THE FILE (NOT RECCOMENDED)*)
