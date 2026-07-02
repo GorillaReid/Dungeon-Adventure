@@ -4,9 +4,10 @@ Dungeon Adventure:
 <img width="222.1" height="257.1" alt="IMG_0144" src="https://github.com/user-attachments/assets/749126a1-2c5b-4367-833f-d952bfb28b2c" />
 
 https://github.com/GorillaReid/Dungeon-Adventure/releases/tag/v1.0.0
-- To play the game click the link above then download the "Source Code.zip" file, unzip the file, install the required libaries listed below and then run python3 main.py
+- To play the game click the link above then download the Dungeon-Adventure file, after you do that open your terminal and go to the folder with the file (ex. cd ~/Downloads) and run **chmod +x Dungeon-Adventure**, after running that command you should just need to type the command **./Dungeon-Adventure** and it should start the game. Hope you guys enjoy!
 
 Required python libraries/packages:
+(*YOU DONT NEED THESE TO PLAY IF YOU DOWNLOAD THE Dungeon-Adventure FILE BUT OPTIONAL IF YOU WANT TO RUN IT WITHOUT THE FILE (NOT RECCOMENDED)*)
 - python3: sudo apt install python3
 - colorama: python3 -m pip install colorama	  or	  sudo apt install python-colorama
 - readchar: python3 -m pip install readchar	  or	  sudo apt install python-readchar
